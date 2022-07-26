@@ -29,7 +29,7 @@ far I haven't like this version much. It's required considerable fine-tuning and
 feel to me anywhere near as tight as the others.
 
 Lastly, **3dish** is only barely related, using the collision plugin. It emulates a little 2.5D
-scene&emdash;limiting the camera POV to do so&emdash;and performs a collision of a falling sphere
+scene&mdash;limiting the camera POV to do so&mdash;and performs a collision of a falling sphere
 with a slope.
 
 I'm not sure what the status of the originally intended top-down project is, but I have given a
