@@ -62,10 +62,14 @@ function M.Advance (pos, radius, segments, vel, nsolid, ntotal, rescale)
 			break
 		end
 
-		local hit = segment_list.CheckMovingCircleHits(segments, n, pos, radius, vel, rescale)
+		local hit = segment_list.CheckMovingCircleHits(segments, n, pos, radius, vel, rescale and rescale ~= "friction")
 
 		if not hit then
-			pos:Add(vel)
+      if seg and rescale == "friction" then
+        vel:SetZero() -- TODO: use property of seg...
+      end
+
+      pos:Add(vel)
 
 			did_advance = true
 
@@ -83,7 +87,7 @@ function M.Advance (pos, radius, segments, vel, nsolid, ntotal, rescale)
 		end
 	end
 
-    return seg, did_advance
+  return seg, did_advance
 end
 
 local Right = ctnative.Vector2(1, 0)

@@ -146,7 +146,7 @@ do
 		update.GetUp(vel)
 		vel:ScaleBy(-dy)
 
-		return update.Advance(pos, radius, segments, vel, nsolid, ntotal)
+		return update.Advance(pos, radius, segments, vel, nsolid, ntotal, "friction")
 	end
 end
 
@@ -350,6 +350,8 @@ do
 				else
 					return cur
 				end
+      elseif stype == "sticky" then -- TODO
+        return cur
 			end
 		end
 
@@ -418,6 +420,9 @@ Runtime:addEventListener("enterFrame", function(event)
 	end
 
 	local hit, did_advance = AuxVert(PlayerPos, R, SegmentList, Delta.y, nsolid, ntotal, VertVelocity)
+  
+	update.SetLowSpeedSquared(old_too_low)
+
 -- TODO: if WaitTime still matters, would probably involve a check like "if OnFloor and not hit then"...
 -- however, the "player" being a circle actually seems to effect the behavior well enough (at the cost of more slipping)
 	if did_advance then
@@ -444,10 +449,10 @@ local function IsLowEnough (seg)
 	return casq > CosAngleSq
 end
 ]=]
-				OnFloor = hit
-			end
-
-			V = -update.GetUpComponent(VertVelocity) / delta -- velocity component going "down"
+				V, OnFloor = 0, hit
+			else
+        V = -update.GetUpComponent(VertVelocity) / delta -- velocity component going "down"
+      end
 		end
 	end
 
