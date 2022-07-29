@@ -24,7 +24,7 @@
 --
 
 -- Modules --
-local segment_list = require("utils.segment_list")
+local contacts = require("utils.contacts")
 
 -- Plugins --
 local ctnative = require("plugin.ctnative")
@@ -42,13 +42,21 @@ local M = {}
 
 local Iterations = 5
 
-local LowSpeedSquared = 1.75
+local LowSpeedSquared = .175
+
+local LowSlope = .6
+
+local Normal = ctnative.Vector2()
 
 local OldPos, OldVel = ctnative.Vector2(), ctnative.Vector2()
 
+--
+--
+--
+
 --- DOCME
-function M.Advance (pos, radius, segments, vel, nsolid, ntotal, rescale)
-	local n, did_advance, seg = _GoingUp_(vel) and nsolid or ntotal, false
+function M.Advance (pos, radius, segments, vel, nsolid, ntotal, how)
+	local n, up, did_advance, seg = _GoingUp_(vel) and nsolid or ntotal, 1, false
 	-- ^^^ This solid / ntotal distinction actually works rather well but snags on vertices on the way down
 	-- possible workaround: visit the remaining segments, note any penetrating vertices, ignore them
 	-- seems a bit hard to get right, though :/ (How do you clear it? What if they're moving?)
@@ -62,33 +70,39 @@ function M.Advance (pos, radius, segments, vel, nsolid, ntotal, rescale)
 			break
 		end
 
-		local hit = segment_list.CheckMovingCircleHits(segments, n, pos, radius, vel, rescale and rescale ~= "friction")
+		local hit = contacts.CheckMovingCircles(segments, n, pos, radius, vel, how)
 
-		if not hit then
-      if seg and rescale == "friction" then
-        vel:SetZero() -- TODO: use property of seg...
+		if hit then
+      OldPos:Set(pos)
+      OldVel:Set(vel)
+
+      contacts.GetPosition(pos)
+      contacts.GetVelocity(vel)
+
+      if not (pos:IsAlmostEqualTo(OldPos) and vel:IsAlmostEqualTo(OldVel)) then
+        contacts.GetNormal(Normal)
+
+        did_advance, seg, up = true, hit, _GetUpComponent_(Normal)
+      end
+    else
+      if not (seg and how == "friction") or up < LowSlope then
+        pos:Add(vel)
+
+        did_advance = true
+      else
+        -- TODO: use property of seg...
       end
 
-      pos:Add(vel)
-
-			did_advance = true
-
 			break
-		end
-
-		OldPos:Set(pos)
-		OldVel:Set(vel)
-
-		segment_list.GetContactPosition(pos)
-		segment_list.GetContactVelocity(vel)
-
-		if not (pos:IsAlmostEqualTo(OldPos) and vel:IsAlmostEqualTo(OldVel)) then
-			did_advance, seg = true, hit
 		end
 	end
 
   return seg, did_advance
 end
+
+--
+--
+--
 
 local Right = ctnative.Vector2(1, 0)
 
@@ -97,6 +111,10 @@ function M.GetRight (right)
 	right:Set(Right)
 end
 
+--
+--
+--
+
 local Up = ctnative.Vector2(0, -1)
 
 --- DOCME
@@ -104,15 +122,27 @@ function M.GetUp (up)
 	up:Set(Up)
 end
 
+--
+--
+--
+
 --- DOCME
 function M.GetUpComponent (vel)
 	return vel:DotProduct(Up)
 end
 
+--
+--
+--
+
 --- DOCME
 function M.GoingUp (vel)
 	return _GetUpComponent_(vel) > 0
 end
+
+--
+--
+--
 
 --- DOCME
 function M.SetIterationCount (iterations)
@@ -123,6 +153,10 @@ function M.SetIterationCount (iterations)
 	return old
 end
 
+--
+--
+--
+
 --- DOCME
 function M.SetLowSpeedSquared (low_speed_squared)
 	local old = LowSpeedSquared
@@ -132,7 +166,10 @@ function M.SetLowSpeedSquared (low_speed_squared)
 	return old
 end
 
--- Cache module members.
+--
+--
+--
+
 _GetUpComponent_ = M.GetUpComponent
 _GoingUp_ = M.GoingUp
 

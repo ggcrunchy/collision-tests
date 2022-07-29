@@ -115,6 +115,10 @@ function M.Intersect (ax, ay, bx, by, cx, cy, dx, dy)
 	return false
 end
 
+--
+--
+--
+
 --- DOCME
 function M.IntersectCircle (px, py, qx, qy, cx, cy, radius)
 	-- v = q - p
@@ -139,6 +143,10 @@ function M.IntersectCircle (px, py, qx, qy, cx, cy, radius)
 		return false
 	end
 end
+
+--
+--
+--
 
 do
 	local Delta = ctnative.Vector2()
@@ -199,6 +207,10 @@ do
 	end
 end
 
+--
+--
+--
+
 --- DOCME
 function M.IntersectUnitCircle (px, py, qx, qy, cx, cy)
 	-- as in IntersectCircle(), but c = d.d - 1
@@ -215,6 +227,10 @@ function M.IntersectUnitCircle (px, py, qx, qy, cx, cy)
 		return false
 	end
 end
+
+--
+--
+--
 
 --- DOCME
 function M.IntersectUnitCircleWithMotion (px, py, qx, qy, cx, cy, vx, vy)
@@ -244,6 +260,10 @@ assert(false, "FIXME")
 
 	return false
 end
+
+--
+--
+--
 
 _Intersect_ = M.Intersect
 

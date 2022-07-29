@@ -29,6 +29,10 @@ local sqrt = math.sqrt
 -- Exports --
 local M = {}
 
+--
+--
+--
+
 --- Solver for the most general case.
 -- @number a Coefficient of quadratic term, where `abs(a)` is assumed to be sufficiently non-zero.
 -- @number b Coefficent of linear term.
@@ -70,6 +74,10 @@ function M.Quadratic (a, b, c)
 	end
 end
 
+--
+--
+--
+
 --- Variant of @{Quadratic} for the case where _a_ is known to be positive.
 -- This removes the need to sort the results.
 function M.Quadratic_PositiveA (a, b, c)
@@ -94,6 +102,10 @@ function M.Quadratic_PositiveA (a, b, c)
 	end
 end
 
+--
+--
+--
+
 --- Variant of @{Quadratic_PositiveA} that only returns the first solution, if any.
 function M.Quadratic_PositiveA_GetFirst (a, b, c)
 	local disc = b^2 - 4 * a * c
@@ -110,6 +122,10 @@ function M.Quadratic_PositiveA_GetFirst (a, b, c)
 		return false
 	end
 end
+
+--
+--
+--
 
 -- Variant of @{Quadratic} for the common case where `b` is double some known quantity.
 -- Given the case `(t*A + B)^2 = (A^2)t^2 + (2 * A * B) * t + (B^2)`, for instance, we would
@@ -140,6 +156,10 @@ function M.Quadratic_TwoB (a, b, c)
 	end
 end
 
+--
+--
+--
+
 --- Variant of @{Quadratic_TwoB} for the case where _a_ is known to be positive.
 function M.Quadratic_TwoB_PositiveA (a, b, c)
 	local disc = b^2 - a * c
@@ -163,6 +183,10 @@ function M.Quadratic_TwoB_PositiveA (a, b, c)
 	end
 end
 
+--
+--
+--
+
 --- Variant of @{Quadratic_TwoB_PositiveA} that only returns the first solution, if any.
 function M.Quadratic_TwoB_PositiveA_GetFirst (a, b, c)
 	local disc = b^2 - a * c
@@ -180,5 +204,8 @@ function M.Quadratic_TwoB_PositiveA_GetFirst (a, b, c)
 	end
 end
 
--- Export the module.
+--
+--
+--
+
 return M

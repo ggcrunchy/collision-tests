@@ -57,33 +57,42 @@ local Segments = {
 	{ x1 = 100, x2 = 150, y = 500, move = { dx = 1, pos1 = -100, pos2 = 200, t = 2 } },
 	{ x = 300, y1 = 850, y2 = 950, move = { dx = 1, pos1 = -100, pos2 = display.contentWidth - 300, t = 8 }}
 }
+
+--
+--
+--
+
 ---
 function M.Init ()
-    for i = 1, #Segments do
-        local sdata = Segments[i]
+  for i = 1, #Segments do
+    local sdata = Segments[i]
 
-        if sdata.x then
-            assert(not (sdata.x1 or sdata.x2), "Inconsistent x-coordinates")
+    if sdata.x then
+      assert(not (sdata.x1 or sdata.x2), "Inconsistent x-coordinates")
 
-            sdata.x1, sdata.x2, sdata.x = sdata.x, sdata.x
-        end
-
-        if sdata.y then
-            assert(not (sdata.y1 or sdata.y2), "Inconsistent y-coordinates")
-
-            sdata.y1, sdata.y2, sdata.y = sdata.y, sdata.y
-        end
-
-        if sdata.x2 < sdata.x1 then
-            sdata.x1, sdata.x2 = sdata.x2, sdata.x1
-            sdata.y1, sdata.y2 = sdata.y2, sdata.y1
-        end
-
-        sdata.p1, sdata.x1, sdata.y1 = ctnative.Vector2(sdata.x1, sdata.y1)
-        sdata.p2, sdata.x2, sdata.y2 = ctnative.Vector2(sdata.x2, sdata.y2)
+      sdata.x1, sdata.x2, sdata.x = sdata.x, sdata.x
     end
 
-    return Segments
+    if sdata.y then
+      assert(not (sdata.y1 or sdata.y2), "Inconsistent y-coordinates")
+
+      sdata.y1, sdata.y2, sdata.y = sdata.y, sdata.y
+    end
+
+    if sdata.x2 < sdata.x1 then
+      sdata.x1, sdata.x2 = sdata.x2, sdata.x1
+      sdata.y1, sdata.y2 = sdata.y2, sdata.y1
+    end
+
+    sdata.p1, sdata.x1, sdata.y1 = ctnative.Vector2(sdata.x1, sdata.y1)
+    sdata.p2, sdata.x2, sdata.y2 = ctnative.Vector2(sdata.x2, sdata.y2)
+  end
+
+  return Segments
 end
+
+--
+--
+--
 
 return M

@@ -38,10 +38,18 @@ function M.HitsMovingCircle (seg, center, radius, vel, intersection, foot)
 	return segments.IntersectCircleWithMotion(seg.p1, seg.p2, center, radius, vel, intersection, foot)
 end
 
+--
+--
+--
+
 --- Does the segment overlap the path from A to B?
 function M.OverlapsPath (seg, x1, y1, x2, y2)
 local p1, p2 = seg.p1, seg.p2
 	return segments.Intersect(p1.x, p1.y, p2.x, p2.y, x1, y1, x2, y2)
 end
+
+--
+--
+--
 
 return M
