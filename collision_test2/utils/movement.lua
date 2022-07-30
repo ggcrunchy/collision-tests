@@ -85,7 +85,7 @@ function M.Horizontal (pos, radius, segments, dx, nsolid, ntotal, fseg, how, hve
 
   vel:SetScaled(Right, dx)
   OldPos:Set(pos)
-
+HH=true
   local hit = update.Advance(pos, radius, segments, vel, nsolid, ntotal, how)
 
   if hit and check_hit and hit ~= fseg then 	-- we ran into something, so try the floor-unaware version;
@@ -96,6 +96,7 @@ function M.Horizontal (pos, radius, segments, dx, nsolid, ntotal, fseg, how, hve
 
     update.Advance(pos, radius, segments, vel, nsolid, ntotal, how)
   end
+HH=false
 end
 
 --

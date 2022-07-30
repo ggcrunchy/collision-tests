@@ -54,6 +54,10 @@ local OldPos, OldVel = ctnative.Vector2(), ctnative.Vector2()
 --
 --
 
+local function IsSteep (_, up)
+  return up < LowSlope -- TODO: use property of seg...
+end
+
 --- DOCME
 function M.Advance (pos, radius, segments, vel, nsolid, ntotal, how)
 	local n, up, did_advance, seg = _GoingUp_(vel) and nsolid or ntotal, 1, false
@@ -85,12 +89,10 @@ function M.Advance (pos, radius, segments, vel, nsolid, ntotal, how)
         did_advance, seg, up = true, hit, _GetUpComponent_(Normal)
       end
     else
-      if not (seg and how == "friction") or up < LowSlope then
+      if not (seg and how == "friction") or IsSteep(seg, up) then
         pos:Add(vel)
 
         did_advance = true
-      else
-        -- TODO: use property of seg...
       end
 
 			break

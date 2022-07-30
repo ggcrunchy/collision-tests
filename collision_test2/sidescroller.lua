@@ -87,8 +87,6 @@ Box.strokeWidth = 2
 --
 --
 
-local Delta = ctnative.Vector2()
-
 local FloorSegment = false
 
 local function DoMovingParts (delta)
@@ -98,10 +96,8 @@ local function DoMovingParts (delta)
 	-- and allots each one the full time slice.
 	local old_iters, old_too_low = update.SetIterationCount(10), update.SetLowSpeedSquared(1e-6)
 
-	Delta:SetZero()
-
 	for i = 1, #MovingPlatforms do
-		MovingPlatforms[i](Segments, PlayerPos, R, FloorSegment, delta, Delta)
+		MovingPlatforms[i](Segments, PlayerPos, R, FloorSegment, delta)
 	end
 
 	update.SetIterationCount(old_iters)
@@ -115,11 +111,13 @@ end
 local HorzVelocity = ctnative.Vector2()
 local VertVelocity = ctnative.Vector2()
 
+local Delta = ctnative.Vector2()
+
 local SegmentList = {}
 
 local function DoStaticParts (dx, dy, delta)
 	-- Find the list of segments we might possibly hit.
-	Delta:AddScaledXY(dx, dy, delta)
+	Delta:SetScaledXY(dx, dy, delta)
 
 	local nsolid, ntotal = region.Gather(SegmentList, PlayerPos, R, Delta, Segments)
 
@@ -160,20 +158,6 @@ local function ProcessHit (hit, delta)
   Up:SetDifference(ContactPos, Foot)
 
   if update.GoingUp(Up) then -- is this possibly a floor?
-    -- ^^^ TODO: omit steep / vertical walls (dot product, e.g. as somewhere above)
---[=[
--- FROM EARLIER CODE:
--- Squared steep angle cosine --
-local CosAngleSq = math.cos(math.rad(75))^2
-
--- Avoid too-steep slopes being used as attachments
-local function IsLowEnough (seg)
-local dxsq = (seg.x2 - seg.x1)^2
-local casq = dxsq / (dxsq + (seg.y2 - seg.y1)^2)
-
-return casq > CosAngleSq
-end
-]=]
     V, FloorSegment = 0, hit
   else
     V = -update.GetUpComponent(VertVelocity) / delta -- velocity component going "down"

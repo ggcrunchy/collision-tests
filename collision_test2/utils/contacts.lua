@@ -51,6 +51,7 @@ local Velocity = ctnative.Vector2()
 
 local Delta = ctnative.Vector2()
 local Intersection = ctnative.Vector2()
+local IntersectionFoot = ctnative.Vector2()
 local LeftoverVel = ctnative.Vector2()
 local ScaledVel = ctnative.Vector2()
 
@@ -61,7 +62,7 @@ function M.CheckMovingCircles (list, n, center, radius, vel, how)
   for i = 1, n do
     local cur = list[i]
 
-    if segments.IntersectCircleWithMotion(cur.p1, cur.p2, center, radius, vel, Intersection, Foot) then
+    if segments.IntersectCircleWithMotion(cur.p1, cur.p2, center, radius, vel, Intersection, IntersectionFoot) then
       Delta:SetDifference(Intersection, center)
 
       local dsq = Delta:LengthSquared()
@@ -73,8 +74,8 @@ print("penetrating...",dsq-a,a,ix-cx,iy-cy) -- see below too
 print("T",T1,T2)]]
         end
 
+        Foot:Set(IntersectionFoot)
         Pos:Set(Intersection)
-        Foot:Set(Foot)
       
         seg, best_dsq = cur, dsq
       end
@@ -145,7 +146,7 @@ print("T",T1,T2)]]
     Normal:SetDifference(Pos, Foot)
     Normal:Normalize()
 
-    local vn = LeftoverVel:DotProduct(Normal)-- / Normal:LengthSquared()
+    local vn = LeftoverVel:DotProduct(Normal)
 
     Velocity:Set(LeftoverVel) -- slide
     Velocity:SubScaled(Normal, vn)
