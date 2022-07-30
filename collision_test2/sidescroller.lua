@@ -285,24 +285,36 @@ end)
 
 local WalkSpeed = 200
 
+local Keys = { up = true, left = true, right = true }
+
+local IsDown = {} -- avoid repeats on Mac
+
 Runtime:addEventListener("key", function(event)
+  if not Keys[event.keyName] then
+    return false
+  end
+
+  local is_down = event.phase == "down"
+  
+  if is_down and IsDown[event.keyName] then
+    return true
+  end
+
 	local dx = 0
 
-	if event.keyName == "up" then
-		if (FloorSegment or WaitTime > 0) and event.phase == "down" then
-			Jumped = true
-		end
-	elseif event.keyName == "left" then
+	if event.keyName == "left" then
 		dx = -WalkSpeed
 	elseif event.keyName == "right" then
 		dx = WalkSpeed
-	else
-		return
 	end
 
-	if event.phase == "up" then
+	if not is_down then
 		dx = -dx
+  elseif event.keyName == "up" and (FloorSegment or WaitTime > 0) then
+    Jumped = true
 	end
 
-	X = X + dx
+	X, IsDown[event.keyName] = X + dx, is_down
+
+  return true
 end)
