@@ -1,5 +1,5 @@
-settings =
-{
+settings = {
+
 	orientation = {
 		default = "portrait"--"landscapeLeft", 
 		-- supported = { "portrait", },
@@ -8,12 +8,25 @@ settings =
 	},
 
 	plugins = {
-		["plugin.ctnative"] = { publisherId = "com.xibalbastudios" }
-	},
-	iphone =
-	{
-		plist =
-		{
+
+		["plugin.ctnative"] = {
+      publisherId = "com.xibalbastudios",
+
+    -- For demonstrations, etc.:
+    --[[
+      supportedPlatforms = {
+        ["mac-sim"] = { url = "https://github.com/ggcrunchy/solar2d-plugins/raw/master/DevSnapshots/plugin.ctnative/win32-sim/data.tgz" },
+        ["win32-sim"] = { url = "https://github.com/ggcrunchy/solar2d-plugins/raw/master/DevSnapshots/plugin.ctnative/win32-sim/data.tgz" }
+      }
+    --]]
+    }
+
+  },
+
+	iphone = {
+
+		plist =	{
+
 			-- UIApplicationExitsOnSuspend = true, -- default is false
 			CFBundleIconFile = "Icon.png",
 			CFBundleIconFiles =
@@ -35,6 +48,9 @@ settings =
 				"Icon-Small-50.png", 
 				"Icon-Small-50@2x.png",
 			},
+
 		},
+
 	}
+
 }
